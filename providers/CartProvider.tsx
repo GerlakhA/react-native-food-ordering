@@ -48,7 +48,7 @@ const CartProvider = ({ children }: ICartProvider) => {
 		setItems(updateItems)
 	}
 
-	const totalPrice = 123
+	const totalPrice = items.reduce((sum, item) => (sum += item.product.price * item.quantity), 0)
 
 	return (
 		<CartContext.Provider value={{ items, totalPrice, addItem, updateQuantity }}>
