@@ -2,9 +2,9 @@ import Button from '@/components/Button'
 import { defaultPizzaImage } from '@/components/ProductListItem'
 import Colors from '@/constants/Colors'
 import * as ImagePicker from 'expo-image-picker'
-import { Stack } from 'expo-router'
+import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TextInput, View } from 'react-native'
 
 const createProductScreen = () => {
 	const [name, setName] = useState('')
@@ -14,6 +14,9 @@ const createProductScreen = () => {
 		name: '',
 		price: ''
 	})
+
+	const { id } = useLocalSearchParams()
+	const isUpdating = !!id
 
 	const validateInput = () => {
 		if (!name) {
@@ -66,9 +69,26 @@ const createProductScreen = () => {
 		}
 	}
 
+	const onDelete = () => {
+		console.warn(`Delete product ${id}`)
+	}
+
+	const confirmDelete = () => {
+		Alert.alert('confirm', 'Are you sure you want to delete product?', [
+			{
+				text: 'Cancel'
+			},
+			{
+				text: 'Delete',
+				style: 'destructive',
+				onPress: onDelete
+			}
+		])
+	}
+
 	return (
 		<View style={styles.container}>
-			<Stack.Screen options={{ title: 'Create Product' }} />
+			<Stack.Screen options={{ title: isUpdating ? 'Update Product' : 'Create Product' }} />
 			<Image
 				source={{ uri: image || defaultPizzaImage }}
 				resizeMode='contain'
@@ -96,7 +116,10 @@ const createProductScreen = () => {
 				style={styles.input}
 			/>
 			<Text style={styles.error}>{error.price ? error.price : null}</Text>
-			<Button onPress={onCreateProduct} text='Create' />
+			<Button onPress={onCreateProduct} text={isUpdating ? 'Update' : 'Create'} />
+			<Text onPress={confirmDelete} style={styles.textButton}>
+				Delete
+			</Text>
 		</View>
 	)
 }

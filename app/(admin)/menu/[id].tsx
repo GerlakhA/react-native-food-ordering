@@ -1,12 +1,12 @@
 import products from '@/assets/data/products'
 import { defaultPizzaImage } from '@/components/ProductListItem'
+import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
+import { FontAwesome } from '@expo/vector-icons'
+import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
-
-const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL']
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 const ProductDetailScreen = () => {
 	const [selectedSize, setSelectedSize] = useState<PizzaSize>('M')
@@ -26,6 +26,25 @@ const ProductDetailScreen = () => {
 
 	return (
 		<View style={styles.container}>
+			<Stack.Screen
+				options={{
+					title: 'Menu',
+					headerRight: () => (
+						<Link href={`/(admin)/menu/createProduct?id=${id}`} asChild>
+							<Pressable>
+								{({ pressed }) => (
+									<FontAwesome
+										name='pencil'
+										size={25}
+										color={Colors.light.tint}
+										style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+									/>
+								)}
+							</Pressable>
+						</Link>
+					)
+				}}
+			/>
 			<Stack.Screen options={{ title: product.name }} />
 			<Image source={{ uri: product.image || defaultPizzaImage }} style={styles.image} />
 
