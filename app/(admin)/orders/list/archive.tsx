@@ -3,7 +3,7 @@ import { FlatList } from 'react-native'
 import orders from '@/assets/data/orders'
 import { OrderListItem } from '@/components/OrderListItem'
 
-export default function TabTwoScreen() {
+export default function ArchiveScreen() {
 	return (
 		<FlatList
 			data={orders}
