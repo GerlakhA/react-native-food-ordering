@@ -1,8 +1,8 @@
 import { defaultPizzaImage } from '@/components/ProductListItem'
 import Colors from '@/constants/Colors'
+import { useGetProductsById } from '@/hooks/useGetProductById'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
-import products from '@assets/data/products'
 import { FontAwesome } from '@expo/vector-icons'
 import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
@@ -15,14 +15,15 @@ const ProductDetailScreen = () => {
 	const { addItem } = useCart()
 	const router = useRouter()
 
-	const product = products.find(p => p.id.toString() === id)
+	// const product = products.find(p => p.id.toString() === id)
+	const { product } = useGetProductsById(Number(id))
 
 	if (!product) return <Text>Product not found!</Text>
 
-	const addToCart = () => {
-		addItem(product, selectedSize)
-		router.push('/cart')
-	}
+	// const addToCart = () => {
+	// 	addItem(product, selectedSize)
+	// 	router.push('/cart')
+	// }
 
 	return (
 		<View style={styles.container}>

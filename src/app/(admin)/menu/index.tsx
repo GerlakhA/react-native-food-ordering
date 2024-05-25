@@ -1,9 +1,14 @@
 import { ProductListItem } from '@/components/ProductListItem'
-import products from '@assets/data/products'
+import { useGetProducts } from '@/hooks/useGetProducts'
+// import products from '@assets/data/products'
 import React from 'react'
-import { FlatList } from 'react-native'
+import { ActivityIndicator, FlatList } from 'react-native'
 
 export default function MenuScreen() {
+	const { products, isProducts } = useGetProducts()
+
+	if (isProducts) return <ActivityIndicator />
+
 	return (
 		<FlatList
 			data={products}

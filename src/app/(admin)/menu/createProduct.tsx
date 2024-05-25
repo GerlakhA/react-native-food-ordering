@@ -1,9 +1,13 @@
 import Button from '@/components/Button'
 import { defaultPizzaImage } from '@/components/ProductListItem'
 import Colors from '@/constants/Colors'
+import { useCreateProduct } from '@/hooks/useCreateProduct'
+import { useGetProductsById } from '@/hooks/useGetProductById'
+import { useUpdateProduct } from '@/hooks/useUpdateProduct'
+import { useAuth } from '@/providers/AuthProvider'
 import * as ImagePicker from 'expo-image-picker'
-import { Stack, useLocalSearchParams } from 'expo-router'
-import React, { useState } from 'react'
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
+import React, { useEffect, useState } from 'react'
 import { Alert, Image, StyleSheet, Text, TextInput, View } from 'react-native'
 
 const createProductScreen = () => {
@@ -17,6 +21,10 @@ const createProductScreen = () => {
 
 	const { id } = useLocalSearchParams()
 	const isUpdating = !!id
+
+	const { isAdmin } = useAuth()
+
+	const router = useRouter()
 
 	const validateInput = () => {
 		if (!name) {
@@ -43,14 +51,26 @@ const createProductScreen = () => {
 		return true
 	}
 
-	const onCreateProduct = () => {
+	const resetFields = () => {
+		setName('')
+		setPrice('')
+		setImage('')
+	}
+
+	const { createProduct, isCreateProduct } = useCreateProduct()
+
+	const onCreate = () => {
 		if (!validateInput()) {
 			return
 		}
 
-		setName('')
-		setPrice('')
-		setImage('')
+		createProduct({
+			name,
+			price: parseFloat(price),
+			image
+		})
+
+		resetFields()
 	}
 
 	const pickImage = async () => {
@@ -86,6 +106,36 @@ const createProductScreen = () => {
 		])
 	}
 
+	const { mutate: updateProduct, isPending } = useUpdateProduct()
+
+	const onUpdate = () => {
+		updateProduct({
+			image,
+			name,
+			price: parseFloat(price),
+			id: Number(id)
+		})
+	}
+
+	const onSubmit = () => {
+		if (isUpdating) {
+			// update
+			onUpdate()
+		} else {
+			onCreate()
+		}
+	}
+
+	const { product } = useGetProductsById(Number(id))
+
+	useEffect(() => {
+		if (product) {
+			setImage(product.image)
+			setName(product.name)
+			setPrice(product.price.toString())
+		}
+	}, [product])
+
 	return (
 		<View style={styles.container}>
 			<Stack.Screen options={{ title: isUpdating ? 'Update Product' : 'Create Product' }} />
@@ -116,7 +166,11 @@ const createProductScreen = () => {
 				style={styles.input}
 			/>
 			<Text style={styles.error}>{error.price ? error.price : null}</Text>
-			<Button onPress={onCreateProduct} text={isUpdating ? 'Update' : 'Create'} />
+			<Button
+				onPress={onSubmit}
+				disabled={isCreateProduct || isPending}
+				text={isUpdating ? 'Update' : isCreateProduct ? 'Create product...' : 'Create'}
+			/>
 			<Text onPress={confirmDelete} style={styles.textButton}>
 				Delete
 			</Text>

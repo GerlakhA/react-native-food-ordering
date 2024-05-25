@@ -9,6 +9,7 @@ import 'react-native-reanimated'
 import { useColorScheme } from '@/components/useColorScheme'
 import AuthProvider from '@/providers/AuthProvider'
 import CartProvider from '@/providers/CartProvider'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -49,18 +50,21 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
 	const colorScheme = useColorScheme()
+	const client = new QueryClient()
 
 	return (
 		<ThemeProvider value={DefaultTheme}>
 			<AuthProvider>
-				<CartProvider>
-					<Stack>
-						<Stack.Screen name='(admin)' options={{ headerShown: false }} />
-						<Stack.Screen name='(user)' options={{ headerShown: false }} />
-						<Stack.Screen name='(auth)' options={{ headerShown: false }} />
-						<Stack.Screen name='cart' options={{ presentation: 'modal' }} />
-					</Stack>
-				</CartProvider>
+				<QueryClientProvider client={client}>
+					<CartProvider>
+						<Stack>
+							<Stack.Screen name='(admin)' options={{ headerShown: false }} />
+							<Stack.Screen name='(user)' options={{ headerShown: false }} />
+							<Stack.Screen name='(auth)' options={{ headerShown: false }} />
+							<Stack.Screen name='cart' options={{ presentation: 'modal' }} />
+						</Stack>
+					</CartProvider>
+				</QueryClientProvider>
 			</AuthProvider>
 		</ThemeProvider>
 	)

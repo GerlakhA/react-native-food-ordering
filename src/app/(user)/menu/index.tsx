@@ -4,6 +4,9 @@ import React from 'react'
 import { FlatList } from 'react-native'
 
 export default function MenuScreen() {
+	// const {products} = useGetProducts()
+
+	// console.log(data)
 	return (
 		<FlatList
 			data={products}
