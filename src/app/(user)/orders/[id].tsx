@@ -1,6 +1,6 @@
-import orders from '@/assets/data/orders'
 import OrderItemListItem from '@/components/OrderItemListItem'
 import { OrderListItem } from '@/components/OrderListItem'
+import orders from '@assets/data/orders'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'

@@ -1,9 +1,9 @@
+import { Order, OrderStatus } from '@/types'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Link, useSegments } from 'expo-router'
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Order, OrderStatus } from '../types'
 
 dayjs.extend(relativeTime)
 

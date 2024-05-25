@@ -1,5 +1,5 @@
-import products from '@/assets/data/products'
 import { ProductListItem } from '@/components/ProductListItem'
+import products from '@assets/data/products'
 import React from 'react'
 import { FlatList } from 'react-native'
 

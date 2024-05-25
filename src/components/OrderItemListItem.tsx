@@ -1,7 +1,7 @@
+import Colors from '@/constants/Colors'
+import { OrderItem } from '@/types'
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import Colors from '../constants/Colors'
-import { OrderItem } from '../types'
 import { defaultPizzaImage } from './ProductListItem'
 
 type OrderItemListItemProps = {

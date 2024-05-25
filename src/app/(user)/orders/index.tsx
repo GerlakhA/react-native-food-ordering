@@ -1,9 +1,9 @@
 import { FlatList } from 'react-native'
 
-import orders from '@/assets/data/orders'
 import { OrderListItem } from '@/components/OrderListItem'
+import orders from '@assets/data/orders'
 
-export default function ArchiveScreen() {
+export default function OrdersScreen() {
 	return (
 		<FlatList
 			data={orders}
