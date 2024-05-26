@@ -1,10 +1,11 @@
 import { ProductListItem } from '@/components/ProductListItem'
-import products from '@assets/data/products'
+import { useGetProducts } from '@/hooks/useGetProducts'
+// import products from '@assets/data/products'
 import React from 'react'
 import { FlatList } from 'react-native'
 
 export default function MenuScreen() {
-	// const {products} = useGetProducts()
+	const { products } = useGetProducts()
 
 	// console.log(data)
 	return (

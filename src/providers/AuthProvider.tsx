@@ -48,6 +48,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
 	return (
 		<AuthContext.Provider
+			//@ts-ignore
 			value={{ session, isLoading, profile, isAdmin: profile?.group === 'ADMIN' }}
 		>
 			{children}

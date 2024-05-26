@@ -1,8 +1,8 @@
 import Button from '@/components/Button'
 import { defaultPizzaImage } from '@/components/ProductListItem'
+import { useGetProductsById } from '@/hooks/useGetProductById'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
-import products from '@assets/data/products'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -16,7 +16,7 @@ const ProductDetailScreen = () => {
 	const { addItem } = useCart()
 	const router = useRouter()
 
-	const product = products.find(p => p.id.toString() === id)
+	const { product } = useGetProductsById(Number(id))
 
 	if (!product) return <Text>Product not found!</Text>
 
