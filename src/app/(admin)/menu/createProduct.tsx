@@ -2,6 +2,7 @@ import Button from '@/components/Button'
 import { defaultPizzaImage } from '@/components/ProductListItem'
 import Colors from '@/constants/Colors'
 import { useCreateProduct } from '@/hooks/useCreateProduct'
+import { useDeleteProduct } from '@/hooks/useDeleteProduct'
 import { useGetProductsById } from '@/hooks/useGetProductById'
 import { useUpdateProduct } from '@/hooks/useUpdateProduct'
 import { useAuth } from '@/providers/AuthProvider'
@@ -89,8 +90,10 @@ const createProductScreen = () => {
 		}
 	}
 
+	const { mutate: deleteProduct, isPending: isDeleteProduct } = useDeleteProduct()
+
 	const onDelete = () => {
-		console.warn(`Delete product ${id}`)
+		deleteProduct(Number(id))
 	}
 
 	const confirmDelete = () => {
@@ -171,8 +174,8 @@ const createProductScreen = () => {
 				disabled={isCreateProduct || isPending}
 				text={isUpdating ? 'Update' : isCreateProduct ? 'Create product...' : 'Create'}
 			/>
-			<Text onPress={confirmDelete} style={styles.textButton}>
-				Delete
+			<Text onPress={confirmDelete} disabled={isDeleteProduct} style={styles.textButton}>
+				{isDeleteProduct ? 'Delete product...' : 'Delete'}
 			</Text>
 		</View>
 	)
