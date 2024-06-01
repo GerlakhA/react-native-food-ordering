@@ -1,16 +1,22 @@
-import OrderItemListItem from '@/components/OrderItemListItem'
+import { OrderItemListItem } from '@/components/OrderItemListItem'
 import { OrderListItem } from '@/components/OrderListItem'
-import orders from '@assets/data/orders'
+import { useOrderItemById } from '@/hooks/order/useOrderItemById'
+import { useUpdateOrderSubscription } from '@/hooks/subscriptions'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
 
 const OrdersIdScreen = () => {
 	const { id } = useLocalSearchParams()
 
-	const order = orders.find(o => o.id.toString() === id)
+	// const order = orders.find(o => o.id.toString() === id)
+	const { data: order, isLoading, isError } = useOrderItemById(Number(id))
 
-	if (!order) return <Text>Order not found</Text>
+	useUpdateOrderSubscription(Number(id))
+
+	if (isLoading) return <ActivityIndicator />
+
+	if (isError) return <Text>Failed to fetch</Text>
 
 	return (
 		<View style={styles.container}>

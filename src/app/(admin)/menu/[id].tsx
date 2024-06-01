@@ -1,6 +1,6 @@
 import { defaultPizzaImage } from '@/components/ProductListItem'
 import Colors from '@/constants/Colors'
-import { useGetProductsById } from '@/hooks/useGetProductById'
+import { useGetProductsById } from '@/hooks/product/useGetProductById'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'

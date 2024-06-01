@@ -1,6 +1,6 @@
 import Button from '@/components/Button'
 import { defaultPizzaImage } from '@/components/ProductListItem'
-import { useGetProductsById } from '@/hooks/useGetProductById'
+import { useGetProductsById } from '@/hooks/product/useGetProductById'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
@@ -27,7 +27,7 @@ const ProductDetailScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			<Stack.Screen options={{ title: product.name }} />
+			<Stack.Screen options={{ title: product.name ?? '' }} />
 			<Image source={{ uri: product.image || defaultPizzaImage }} style={styles.image} />
 			<Text>Select size</Text>
 			<View style={styles.sizes}>

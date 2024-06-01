@@ -1,4 +1,4 @@
-import { Order, OrderStatus } from '@/types'
+import { Tables } from '@/types'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Link, useSegments } from 'expo-router'
@@ -8,12 +8,14 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 dayjs.extend(relativeTime)
 
 type OrderListItemProps = {
-	order: Order
-	orderStatus?: OrderStatus
+	order: Tables<'orders'> | undefined
+	orderStatus?: string | undefined
 }
 
-export const OrderListItem = ({ order, orderStatus }: OrderListItemProps) => {
+export const OrderListItem = ({ order }: OrderListItemProps) => {
 	const segments = useSegments()
+
+	if (!order) return null
 
 	return (
 		<Link href={`/${segments[0]}/orders/${order.id}`} asChild>
@@ -23,7 +25,7 @@ export const OrderListItem = ({ order, orderStatus }: OrderListItemProps) => {
 					<Text style={styles.time}>{dayjs(order.created_at).fromNow()}</Text>
 				</View>
 
-				<Text style={styles.status}>{orderStatus ? orderStatus : order.status}</Text>
+				<Text style={styles.status}>{order.status}</Text>
 			</Pressable>
 		</Link>
 	)
@@ -49,3 +51,5 @@ const styles = StyleSheet.create({
 		fontWeight: '500'
 	}
 })
+
+export default OrderListItem

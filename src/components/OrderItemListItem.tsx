@@ -1,14 +1,16 @@
 import Colors from '@/constants/Colors'
-import { OrderItem } from '@/types'
+import { Tables } from '@/database.types'
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { defaultPizzaImage } from './ProductListItem'
 
 type OrderItemListItemProps = {
-	order: OrderItem
+	order: { products: Tables<'products'> | null } & Tables<'order_items'>
 }
 
-const OrderItemListItem = ({ order }: OrderItemListItemProps) => {
+export const OrderItemListItem = ({ order }: OrderItemListItemProps) => {
+	if (!order.products) return null
+
 	return (
 		<View style={styles.container}>
 			<Image
@@ -19,7 +21,9 @@ const OrderItemListItem = ({ order }: OrderItemListItemProps) => {
 			<View style={{ flex: 1 }}>
 				<Text style={styles.title}>{order.products.name}</Text>
 				<View style={styles.subtitleContainer}>
-					<Text style={styles.price}>${order.products.price.toFixed(2)}</Text>
+					<Text style={styles.price}>
+						${order.products.price ? order.products.price.toFixed(2) : 0}
+					</Text>
 					<Text>Size: {order.size}</Text>
 				</View>
 			</View>

@@ -1,5 +1,5 @@
 import { ProductListItem } from '@/components/ProductListItem'
-import { useGetProducts } from '@/hooks/useGetProducts'
+import { useGetProducts } from '@/hooks/product/useGetProducts'
 // import products from '@assets/data/products'
 import React from 'react'
 import { ActivityIndicator, FlatList } from 'react-native'

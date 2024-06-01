@@ -1,9 +1,8 @@
 import { supabase } from '@/lib/supabse'
-import { Product } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetProductsById = (id: number) => {
-	const { data: product, isLoading: isProduct } = useQuery<Product>({
+	const { data: product, isLoading: isProduct } = useQuery({
 		queryKey: ['product', id],
 		queryFn: async () => {
 			const { data, error } = await supabase.from('products').select('*').eq('id', id).single()
