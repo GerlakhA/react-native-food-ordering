@@ -5,7 +5,11 @@ import { useCreateProduct } from '@/hooks/product/useCreateProduct'
 import { useDeleteProduct } from '@/hooks/product/useDeleteProduct'
 import { useGetProductsById } from '@/hooks/product/useGetProductById'
 import { useUpdateProduct } from '@/hooks/product/useUpdateProduct'
+import { supabase } from '@/lib/supabse'
 import { useAuth } from '@/providers/AuthProvider'
+import { decode } from 'base64-arraybuffer'
+import { randomUUID } from 'expo-crypto'
+import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
@@ -58,17 +62,19 @@ const createProductScreen = () => {
 		setImage('')
 	}
 
-	const { createProduct, isCreateProduct } = useCreateProduct()
+	const { mutate: createProduct } = useCreateProduct()
 
-	const onCreate = () => {
+	const onCreate = async () => {
 		if (!validateInput()) {
 			return
 		}
 
+		const imagePath = await uploadImage()
+
 		createProduct({
 			name,
 			price: parseFloat(price),
-			image
+			image: imagePath
 		})
 
 		resetFields()
@@ -87,6 +93,25 @@ const createProductScreen = () => {
 
 		if (!result.canceled) {
 			setImage(result.assets[0].uri)
+		}
+	}
+
+	const uploadImage = async () => {
+		if (!image?.startsWith('file://')) {
+			return
+		}
+
+		const base64 = await FileSystem.readAsStringAsync(image, {
+			encoding: 'base64'
+		})
+		const filePath = `${randomUUID()}.png`
+		const contentType = 'image/png'
+		const { data, error } = await supabase.storage
+			.from('product_images')
+			.upload(filePath, decode(base64), { contentType })
+
+		if (data) {
+			return data.path
 		}
 	}
 
@@ -129,12 +154,14 @@ const createProductScreen = () => {
 		}
 	}
 
-	const { product } = useGetProductsById(Number(id))
+	const { data: product } = useGetProductsById(Number(id))
 
 	useEffect(() => {
 		if (product) {
 			setImage(product.image)
-			setName(product.name)
+			setName(product.name ?? '')
+
+			//@ts-ignore
 			setPrice(product.price.toString())
 		}
 	}, [product])
@@ -169,11 +196,7 @@ const createProductScreen = () => {
 				style={styles.input}
 			/>
 			<Text style={styles.error}>{error.price ? error.price : null}</Text>
-			<Button
-				onPress={onSubmit}
-				disabled={isCreateProduct || isPending}
-				text={isUpdating ? 'Update' : isCreateProduct ? 'Create product...' : 'Create'}
-			/>
+			<Button onPress={onSubmit} disabled={isPending} text={isUpdating ? 'Update' : 'Create'} />
 			<Text onPress={confirmDelete} disabled={isDeleteProduct} style={styles.textButton}>
 				{isDeleteProduct ? 'Delete product...' : 'Delete'}
 			</Text>

@@ -12,11 +12,11 @@ const OrdersIdScreen = () => {
 	// const order = orders.find(o => o.id.toString() === id)
 	const { data: order, isLoading, isError } = useOrderItemById(Number(id))
 
-	useUpdateOrderSubscription(Number(id))
-
 	if (isLoading) return <ActivityIndicator />
 
-	if (isError) return <Text>Failed to fetch</Text>
+	if (isError || !order) return <Text>Failed to fetch</Text>
+
+	useUpdateOrderSubscription(Number(id))
 
 	return (
 		<View style={styles.container}>

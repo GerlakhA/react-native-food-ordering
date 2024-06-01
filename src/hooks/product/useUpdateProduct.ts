@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabse'
-import { Product } from '@/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 
@@ -8,21 +7,27 @@ export const useUpdateProduct = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		async mutationFn({ id, ...update }: Product) {
-			const { data, error } = await supabase.from('products').update(update).eq('id', id).select()
+		async mutationFn(data: any) {
+			const { error, data: updatedProduct } = await supabase
+				.from('products')
+				.update({
+					name: data.name,
+					image: data.image,
+					price: data.price
+				})
+				.eq('id', data.id)
+				.select()
+				.single()
 
 			if (error) {
-				throw error
+				throw new Error(error.message)
 			}
-			return data
+			return updatedProduct
 		},
 		async onSuccess(_, { id }) {
 			await queryClient.invalidateQueries({ queryKey: ['products'] })
-			await queryClient.invalidateQueries({ queryKey: ['product', id] })
+			await queryClient.invalidateQueries({ queryKey: ['products', id] })
 			router.back()
-		},
-		onError(error) {
-			console.log(error)
 		}
 	})
 }

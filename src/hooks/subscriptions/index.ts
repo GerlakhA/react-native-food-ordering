@@ -8,7 +8,8 @@ export const useInsertOrderSubscription = () => {
 	useEffect(() => {
 		const ordersSubscription = supabase
 			.channel('custom-insert-channel')
-			.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, () => {
+			.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, payload => {
+				console.log('Change received!', payload)
 				queryClient.invalidateQueries({ queryKey: ['orders'] })
 			})
 			.subscribe()
@@ -33,7 +34,7 @@ export const useUpdateOrderSubscription = (id: number) => {
 					table: 'orders',
 					filter: `id=eq.${id}`
 				},
-				() => {
+				payload => {
 					queryClient.invalidateQueries({ queryKey: ['orders', id] })
 				}
 			)

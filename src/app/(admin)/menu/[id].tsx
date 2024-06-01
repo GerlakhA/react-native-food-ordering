@@ -1,4 +1,5 @@
 import { defaultPizzaImage } from '@/components/ProductListItem'
+import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { useGetProductsById } from '@/hooks/product/useGetProductById'
 import { useCart } from '@/providers/CartProvider'
@@ -6,7 +7,7 @@ import { PizzaSize } from '@/types'
 import { FontAwesome } from '@expo/vector-icons'
 import { Link, Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 
 const ProductDetailScreen = () => {
 	const [selectedSize, setSelectedSize] = useState<PizzaSize>('M')
@@ -16,7 +17,7 @@ const ProductDetailScreen = () => {
 	const router = useRouter()
 
 	// const product = products.find(p => p.id.toString() === id)
-	const { product } = useGetProductsById(Number(id))
+	const { data: product } = useGetProductsById(Number(id))
 
 	if (!product) return <Text>Product not found!</Text>
 
@@ -46,8 +47,13 @@ const ProductDetailScreen = () => {
 					)
 				}}
 			/>
-			<Stack.Screen options={{ title: product.name }} />
-			<Image source={{ uri: product.image || defaultPizzaImage }} style={styles.image} />
+			<Stack.Screen options={{ title: product.name || '' }} />
+			<RemoteImage
+				fallback={defaultPizzaImage}
+				path={product.image}
+				style={styles.image}
+				resizeMode='contain'
+			/>
 
 			<Text style={styles.title}>${product.name}</Text>
 			<Text style={styles.price}>${product.price}</Text>

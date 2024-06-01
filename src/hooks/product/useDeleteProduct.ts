@@ -8,20 +8,15 @@ export const useDeleteProduct = () => {
 
 	return useMutation({
 		async mutationFn(id: number) {
-			const { data, error } = await supabase.from('products').delete().eq('id', id).select()
-
+			const { error } = await supabase.from('products').delete().eq('id', id)
 			if (error) {
-				throw error
+				throw new Error(error.message)
 			}
-			return data
 		},
 		async onSuccess() {
 			await queryClient.invalidateQueries({ queryKey: ['products'] })
 			router.back()
 			router.back()
-		},
-		onError(error) {
-			console.log(error)
 		}
 	})
 }
